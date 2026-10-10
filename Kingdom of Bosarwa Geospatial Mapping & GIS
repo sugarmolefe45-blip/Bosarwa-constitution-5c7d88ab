@@ -1,0 +1,89 @@
+├── .github/
+│   └── workflows/
+│       └──
+deploy-pages.yml      # Automates hosting
+of maps via GitHub Pages
+├── constitutions/
+│   ├──
+KBNG-Supreme-Law.md       # Kingdom of
+Bosarwa National Government Constitution
+│   ├──
+BRA-Framework.md          # Basarwa
+Regime Alliance Framework Document
+│   └──
+KBNGU-Sovereign-Union.md  # Kingdom of
+Bosarwa Union International Treaty
+├── monetary-framework/
+│   ├──
+bylaws-liquidity-v1.json  #
+Machine-readable macroprudential bylaws
+│   └──
+crypto-routing-specs.rfc  # Cryptographic
+standard definitions for Madi transaction routing
+└── mapping/
+    ├──
+boundaries-piers.geojson  # GIS Mapping
+of ancestral land boundaries under PIERS
+    └──
+index.html                # Live map
+interface served via github.io
+
+# Initialize local workspace for the Sovereign Framework
+Mkdir -p
+kingdom-of-bosarwa-governance/{constitutions,monetary-framework,mapping}
+Cd kingdom-of-bosarwa-governance
+# Initialize Git version control
+Git init
+# Create the foundational configuration for publishing maps
+to GitHub Pages
+Mkdir -p .github/workflows
+Cat <<EOF > .github/workflows/deploy-pages.yml
+Name: Deploy Sovereign Maps to Pages
+On:
+  Push:
+    Branches: [“main”]
+Permissions:
+  Contents: read
+  Pages: write
+  Id-token: write
+Jobs:
+  Deploy:
+    Environment:
+      Name:
+github-pages
+      url: \${{
+steps.deployment.outputs.page_url }}
+    runs-on:
+ubuntu-latest
+    steps:
+-         
+Name: Checkout Source Code
+        Uses:
+actions/checkout@v4
+-         
+Name: Setup Pages Workspace
+        Uses:
+actions/configure-pages@v4
+-         
+Name: Upload Build Artifacts
+        Uses:
+actions/upload-pages-artifact@v3
+        With:
+          Path:
+‘./mapping’
+-         
+Name: Deploy to GitHub Pages
+        Id: deployment
+        Uses:
+actions/deploy-pages@v4
+EOF
+# Link workspace to the official organization repository
+Git remote add origin https://github.com
+Echo “# The Kingdom of Bosarwa Governance Infrastructure”
+> README.md
+Git add .
+Git commit -m “feat: initialize supreme legal, monetary, and
+mapping infrastructure"
+# Note: Use your authenticated security token or SSH key to
+push to main
+# git push -u origin main
